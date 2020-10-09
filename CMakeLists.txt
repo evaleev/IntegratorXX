@@ -7,7 +7,7 @@ project( IntegratorXX VERSION 1.2.0 LANGUAGES CXX )
 add_library( integratorxx INTERFACE )
 add_library( IntegratorXX::integratorxx ALIAS integratorxx )
 
-option( INTEGRATORXX_ENABLE_TESTS "Enable Tets" OFF )
+option( INTEGRATORXX_ENABLE_TESTS "Enable Tets" ON )
 
 if( INTEGRATORXX_ENABLE_TESTS )
   find_package( Catch2 QUIET )
@@ -40,6 +40,14 @@ target_include_directories( integratorxx
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 )
+
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag("-Wno-missing-braces" INTEGRATORXX_HAS_NO_MISSING_BRACES )
+if( INTEGRATORXX_HAS_NO_MISSING_BRACES )
+	target_compile_options( integratorxx INTERFACE $<$<COMPILE_LANGUAGE:CXX>: -Wno-missing-braces> )
+endif()
+
+
 
 # INSTALL rules
 include( GNUInstallDirs )
